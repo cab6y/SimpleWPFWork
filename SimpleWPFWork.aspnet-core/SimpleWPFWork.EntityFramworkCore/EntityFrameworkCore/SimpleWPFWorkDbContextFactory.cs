@@ -10,7 +10,6 @@ namespace SimpleWPFWork.EntityFrameworkCore
     {
         public SimpleWPFWorkDbContext CreateDbContext(string[] args)
         {
-            // appsettings.json'u oku
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")

@@ -32,7 +32,7 @@ namespace SimpleWPFWork.Host.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var statusCode = HttpStatusCode.InternalServerError;
-            object result; // ← object kullan
+            object result;
 
             switch (exception)
             {
