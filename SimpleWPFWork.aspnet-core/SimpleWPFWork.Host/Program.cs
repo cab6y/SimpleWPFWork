@@ -1,18 +1,12 @@
-using SimpleWPFWork.Application;
+ï»¿using SimpleWPFWork.Application;
 using SimpleWPFWork.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ? EntityFrameworkCore katmaný
 builder.Services.AddEntityFrameworkCore(builder.Configuration);
-
-// ? Application katmaný (AutoMapper + tüm AppService'ler)
 builder.Services.AddApplicationLayer();
 
-// Controllers
 builder.Services.AddControllers();
-
-// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -26,6 +20,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapControllers();
+app.MapControllers(); // âœ… Sadece bu!
 
 app.Run();

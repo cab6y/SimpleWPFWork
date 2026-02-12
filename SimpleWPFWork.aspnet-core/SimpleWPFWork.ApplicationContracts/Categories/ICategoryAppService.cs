@@ -1,5 +1,6 @@
 ﻿namespace SimpleWPFWork.ApplicationContracts.Categories
 {
+
     public interface ICategoryAppService
     {
         Task<CategoryDto> CreateAsync(CategoryCommand input);
