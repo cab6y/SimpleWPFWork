@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleWPFWork.Domain\SimpleWPFWork.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

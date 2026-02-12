@@ -10,9 +10,9 @@ namespace SimpleWPFWork.Domain.Entities.Todos
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsCompleted { get; set; }
-        public string Priority { get; set; }
+        public string Priority { get; set; } 
         public DateTime DueDate { get; set; }
-        public string CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public string Username { get; set; }
         public Category Category { get; set; }
     }
