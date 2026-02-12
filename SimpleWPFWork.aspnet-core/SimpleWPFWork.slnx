@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/test/">
+    <Project Path="SimpleWPFWork.Application.Test/SimpleWPFWork.Application.Test.csproj" Id="6f4ac30b-420e-48b2-b9ac-f3c7ec88258f" />
+  </Folder>
   <Project Path="SimpleWPFWork.Application/SimpleWPFWork.Application.csproj" />
   <Project Path="SimpleWPFWork.ApplicationContracts/SimpleWPFWork.ApplicationContracts.csproj" />
   <Project Path="SimpleWPFWork.DBMigrator/SimpleWPFWork.DBMigrator.csproj" />
