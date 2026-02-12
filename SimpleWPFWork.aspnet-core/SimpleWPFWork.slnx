@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="SimpleWPFWork.Application/SimpleWPFWork.Application.csproj" />
+  <Project Path="SimpleWPFWork.ApplicationContracts/SimpleWPFWork.ApplicationContracts.csproj" />
+  <Project Path="SimpleWPFWork.DBMigrator/SimpleWPFWork.DBMigrator.csproj" />
+  <Project Path="SimpleWPFWork.Domain/SimpleWPFWork.Domain.csproj" />
+  <Project Path="SimpleWPFWork.EntityFramworkCore/SimpleWPFWork.EntityFramworkCore.csproj" />
+  <Project Path="SimpleWPFWork.Host/SimpleWPFWork.Host.csproj" />
+</Solution>
