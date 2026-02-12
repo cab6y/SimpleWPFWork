@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
+using SimpleWPFWork.Application.Common.Behaviors;
+using System.Reflection;
 
 namespace SimpleWPFWork.Application
 {
@@ -7,10 +11,24 @@ namespace SimpleWPFWork.Application
     {
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
-            // AutoMapper
-            services.AddAutoMapper(typeof(ApplicationAssemblyMarker).Assembly);
+            var assembly = typeof(ApplicationAssemblyMarker).Assembly;
 
-            // Scrutor ile otomatik service kayıt
+            // AutoMapper
+            services.AddAutoMapper(assembly);
+
+            // MediatR
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(assembly);
+
+                // Validation pipeline behavior
+                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            });
+
+            // FluentValidation
+            services.AddValidatorsFromAssembly(assembly);
+
+            // Scrutor ile AppService'leri kaydet
             services.Scan(scan => scan
                 .FromAssemblyOf<ApplicationAssemblyMarker>()
                 .AddClasses(classes => classes.Where(type =>
