@@ -17,9 +17,9 @@ namespace SimpleWPFWork.Application.Categories.Commands.UpdateCategory
                 .NotEmpty().WithMessage("Kategori adı boş olamaz")
                 .MaximumLength(50).WithMessage("Kategori adı en fazla 50 karakter olabilir");
 
-            RuleFor(x => x.Color)
-                .MaximumLength(7).WithMessage("Renk kodu en fazla 7 karakter olabilir")
-                .Matches("^#[0-9A-Fa-f]{6}$").WithMessage("Geçerli bir renk kodu girin (#RRGGBB)");
+            //RuleFor(x => x.Color)
+            //    .MaximumLength(7).WithMessage("Renk kodu en fazla 7 karakter olabilir")
+            //    .Matches("^#[0-9A-Fa-f]{6}$").WithMessage("Geçerli bir renk kodu girin (#RRGGBB)");
         }
     }
 }

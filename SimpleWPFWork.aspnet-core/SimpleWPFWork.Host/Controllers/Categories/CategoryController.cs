@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWPFWork.ApplicationContracts.Categories;
 using SimpleWPFWork.ApplicationContracts.Categories.Commands.CreateCategory;
+using SimpleWPFWork.ApplicationContracts.Categories.Commands.DeleteCategory;
 using SimpleWPFWork.ApplicationContracts.Categories.Commands.UpdateCategory;
+using SimpleWPFWork.ApplicationContracts.Categories.Queries.GetCategory;
 using SimpleWPFWork.ApplicationContracts.Categories.Queries.GetCategoryList;
 
 namespace SimpleWPFWork.Host.Controllers.Categories
@@ -11,21 +14,41 @@ namespace SimpleWPFWork.Host.Controllers.Categories
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryAppService _service;
-        public CategoryController(ICategoryAppService service) { _service = service; }
-        [HttpPost]
-        public async Task<CategoryDto> Create(CreateCategoryCommand input) => await _service.CreateAsync(input);
+        private readonly IMediator _mediator;
 
-        [HttpPut("{id}")]
-        public async Task<CategoryDto> Update(UpdateCategoryCommand input) => await _service.UpdateAsync(input);
+        public CategoryController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<CategoryDto> CreateAsync(CreateCategoryCommand input)
+        {
+            return await _mediator.Send(input);
+        }
+
+        [HttpPut]
+        public async Task<CategoryDto> UpdateAsync(UpdateCategoryCommand input)
+        {
+            return await _mediator.Send(input);
+        }
 
         [HttpGet("{id}")]
-        public async Task<CategoryDto> Get(Guid id) => await _service.GetAsync(id);
+        public async Task<CategoryDto> GetAsync(Guid id)
+        {
+            return await _mediator.Send(new GetCategoryQuery { Id = id });
+        }
 
         [HttpGet]
-        public async Task<List<CategoryDto>> GetListPagination([FromQuery] GetCategoryListQuery input) => await _service.GetPaginationListAsync(input);
+        public async Task<List<CategoryDto>> GetListAsync([FromQuery] GetCategoryListQuery input)
+        {
+            return await _mediator.Send(input);
+        }
 
         [HttpDelete("{id}")]
-        public async Task Delete(Guid id) => await _service.DeleteAsync(id);
+        public async Task DeleteAsync(Guid id)
+        {
+            await _mediator.Send(new DeleteCategoryCommand { Id = id });
+        }
     }
 }

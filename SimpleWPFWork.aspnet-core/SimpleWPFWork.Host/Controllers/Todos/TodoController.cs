@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWPFWork.ApplicationContracts.Todos;
 using SimpleWPFWork.ApplicationContracts.Todos.Commands.CreateTodo;
+using SimpleWPFWork.ApplicationContracts.Todos.Commands.DeleteTodo;
 using SimpleWPFWork.ApplicationContracts.Todos.Commands.UpdateTodo;
 using SimpleWPFWork.ApplicationContracts.Todos.Queries.GetTodo;
 using SimpleWPFWork.ApplicationContracts.Todos.Queries.GetTodoList;
@@ -12,35 +14,41 @@ namespace SimpleWPFWork.Host.Controllers.Todos
     [ApiController]
     public class TodoController : ControllerBase
     {
-        private readonly ITodoAppService _service;
+        private readonly IMediator _mediator;
 
-        public TodoController(ITodoAppService service)
+        public TodoController(IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<TodoDto> Create([FromBody] CreateTodoCommand input)
+        public async Task<TodoDto> CreateAsync(CreateTodoCommand input)
         {
-            return await _service.CreateAsync(input);
+            return await _mediator.Send(input);
         }
 
         [HttpPut]
-        public async Task<TodoDto> Update([FromBody] UpdateTodoCommand input)
+        public async Task<TodoDto> UpdateAsync(UpdateTodoCommand input)
         {
-            return await _service.UpdateAsync(input);
+            return await _mediator.Send(input);
         }
 
         [HttpGet]
-        public async Task<List<TodoDto>> GetList([FromQuery] GetTodoListQuery input)
+        public async Task<List<TodoDto>> GetListAsync([FromQuery] GetTodoListQuery input)
         {
-            return await _service.GetListAsync(input);
+            return await _mediator.Send(input);
         }
 
         [HttpGet("{id}")]
-        public async Task<TodoDto> Get(Guid id)
+        public async Task<TodoDto> GetAsync(Guid id)
         {
-            return await _service.GetAsync(new GetTodoQuery { Id = id });
+            return await _mediator.Send(new GetTodoQuery { Id = id });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task DeleteAsync(Guid id)
+        {
+            await _mediator.Send(new DeleteTodoCommand { Id = id });
         }
     }
 }
