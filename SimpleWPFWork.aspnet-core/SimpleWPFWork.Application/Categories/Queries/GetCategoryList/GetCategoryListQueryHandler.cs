@@ -33,8 +33,8 @@ namespace SimpleWPFWork.Application.Categories.Queries.GetCategoryList
 
             // Sayfalama
             var categories = await query
-                .Skip(request.Page * request.Limit)
-                .Take(request.Limit)
+                .Skip((int)request.Page * (int)request.Limit)
+                .Take((int)request.Limit)
                 .ToListAsync(cancellationToken);
 
             return _mapper.Map<List<CategoryDto>>(categories);

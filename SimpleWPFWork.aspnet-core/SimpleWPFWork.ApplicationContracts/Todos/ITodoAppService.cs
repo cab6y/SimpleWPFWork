@@ -8,10 +8,10 @@ namespace SimpleWPFWork.ApplicationContracts.Todos
 {
     public interface ITodoAppService
     {
-        Task<List<TodoDto>> GetAllAsync(GetTodoListQuery input);
-        Task<TodoDto> GetByIdAsync(GetTodoQuery input);
-        Task CreateAsync(CreateTodoCommand input);
-        Task UpdateAsync(UpdateTodoCommand input);
+        Task<TodoDto> CreateAsync(CreateTodoCommand input);
+        Task<TodoDto> UpdateAsync(UpdateTodoCommand input);
         Task DeleteAsync(DeleteTodoCommand input);
+        Task<List<TodoDto>> GetListAsync(GetTodoListQuery input);
+        Task<TodoDto> GetAsync(GetTodoQuery input);
     }
 }
