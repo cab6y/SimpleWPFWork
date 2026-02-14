@@ -32,6 +32,8 @@ A modern todo management application built with WPF, .NET 10, and SQL Server fea
 - **Repository Pattern** - Data access abstraction
 
 ### Architecture & Patterns
+- **Monolith** - OOP
+- **SOLID**
 - **CQRS** (Command Query Responsibility Segregation)
 - **Repository Pattern**
 - **Dependency Injection**
