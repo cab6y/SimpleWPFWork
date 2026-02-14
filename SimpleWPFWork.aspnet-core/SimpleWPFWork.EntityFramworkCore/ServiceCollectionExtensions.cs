@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleWPFWork.EntityFrameworkCore.Interceptors;
+using SimpleWPFWork.EntityFrameworkCore.Seed.Procedures.Todos;
 
 namespace SimpleWPFWork.EntityFrameworkCore
 {
@@ -16,7 +17,6 @@ namespace SimpleWPFWork.EntityFrameworkCore
             // Interceptor
             services.AddSingleton<SoftDeleteInterceptor>();
 
-            // DbContext
             services.AddDbContext<SimpleWPFWorkDbContext>((sp, options) =>
             {
                 var interceptor = sp.GetRequiredService<SoftDeleteInterceptor>();
