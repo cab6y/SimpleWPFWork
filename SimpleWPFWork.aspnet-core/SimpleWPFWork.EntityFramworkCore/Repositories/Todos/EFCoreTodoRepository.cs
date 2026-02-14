@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.Domain.Entities.Todos;
 using SimpleWPFWork.EntityFrameworkCore;
@@ -69,6 +70,61 @@ namespace SimpleWPFWork.EntityFramworkCore.Repositories.Todos
             }
 
             return todos;
+        }
+        public async Task<Todo> UpdateAsync(Todo todo)
+        {
+            var connection = _context.Database.GetDbConnection() as SqlConnection;
+
+            var sql = @"
+                UPDATE Todos 
+                SET 
+                    Title = @Title,
+                    Description = @Description,
+                    IsCompleted = @IsCompleted,
+                    Priority = @Priority,
+                    DueDate = @DueDate,
+                    CategoryId = @CategoryId,
+                    Username = @Username,
+                    LastModificationTime = @LastModificationTime
+                WHERE Id = @Id;
+
+                SELECT 
+                    Id,
+                    Title,
+                    Description,
+                    IsCompleted,
+                    Priority,
+                    DueDate,
+                    CategoryId,
+                    Username,
+                    CreationTime,
+                    LastModificationTime,
+                    DeleterUserId,
+                    DeletionTime,
+                    IsDeleted
+                FROM Todos 
+                WHERE Id = @Id;
+            ";
+
+            var parameters = new
+            {
+                todo.Id,
+                todo.Title,
+                todo.Description,
+                todo.IsCompleted,
+                todo.Priority,
+                todo.DueDate,
+                todo.CategoryId,
+                todo.Username,
+                LastModificationTime = DateTime.Now
+            };
+
+            if (connection.State != ConnectionState.Open)
+                await connection.OpenAsync();
+
+            var updatedTodo = await connection.QuerySingleAsync<Todo>(sql, parameters);
+
+            return updatedTodo;
         }
     }
 }

@@ -16,5 +16,6 @@ namespace SimpleWPFWork.Domain.Entities.Todos
              string? username = null,
              int page = 0,
              int limit = 100);
+        Task<Todo> UpdateAsync(Todo todo);
     }
 }
