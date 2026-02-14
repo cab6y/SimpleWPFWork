@@ -28,15 +28,23 @@ namespace SimpleWPFWork.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            // Category yapılandırması
+            // ✅ Category yapılandırması + Temporal Table
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Color).HasMaxLength(7);
+
+                // ✅ Temporal Table aktif et
+                entity.ToTable("Categories", tb => tb.IsTemporal(t =>
+                {
+                    t.UseHistoryTable("CategoriesHistory"); // History table adı
+                    t.HasPeriodStart("PeriodStart");
+                    t.HasPeriodEnd("PeriodEnd");
+                }));
             });
 
-            // Todo yapılandırması (TEK SEFER)
+            // ✅ Todo yapılandırması + Temporal Table
             modelBuilder.Entity<Todo>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -55,6 +63,14 @@ namespace SimpleWPFWork.EntityFrameworkCore
                 entity.HasIndex(e => e.Username);
                 entity.HasIndex(e => e.IsCompleted);
                 entity.HasIndex(e => e.DueDate);
+
+                // ✅ Temporal Table aktif et
+                entity.ToTable("Todos", tb => tb.IsTemporal(t =>
+                {
+                    t.UseHistoryTable("TodosHistory"); // History table adı
+                    t.HasPeriodStart("PeriodStart");
+                    t.HasPeriodEnd("PeriodEnd");
+                }));
             });
 
             // Soft Delete Query Filter
@@ -81,8 +97,6 @@ namespace SimpleWPFWork.EntityFrameworkCore
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // Sabit Guid'ler
-            // SABİT BİR NESNEYE GENERIC GUID ATANARAK DA YÖNETİLEBİLİRDİ BÖYLE KOLAYIMA GELDİ.
             var isKategoriId = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var kisiselKategoriId = Guid.Parse("22222222-2222-2222-2222-222222222222");
             var alisverisKategoriId = Guid.Parse("33333333-3333-3333-3333-333333333333");
