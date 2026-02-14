@@ -1,8 +1,21 @@
-﻿using SimpleWPFWork.Application;
+﻿using Serilog;
+using SimpleWPFWork.Application;
 using SimpleWPFWork.EntityFrameworkCore;
 using SimpleWPFWork.Host.Middleware;
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "logs/app-.txt",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+Log.Information("Starting SimpleWPFWork Application...");
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.AddEntityFrameworkCore(builder.Configuration);
 builder.Services.AddApplicationLayer();
@@ -13,6 +26,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+        diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
+    };
+});
 app.Use(async (context, next) =>
 {
     var sw = System.Diagnostics.Stopwatch.StartNew();
