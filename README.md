@@ -18,7 +18,7 @@ A modern todo management application built with WPF, .NET 10, and SQL Server fea
 - **FluentValidation** - Input validation
 - **Serilog** - Structured logging
 - **ADO.NET** - GetList Functions With Stored Procedures
--- **Xunit Test Layer ** - API endpoints testings
+- **Xunit Test Layer ** - API endpoints testings
 ### Frontend
 - **WPF (.NET 10)** - Desktop UI
 - **MVVM Pattern** - Architecture
