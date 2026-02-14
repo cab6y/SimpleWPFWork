@@ -98,9 +98,3 @@ Connection string is managed in `appsettings.json` files:
 - History tables: `CategoriesHistory`, `TodosHistory`
 - Stored procedures: `GetFilteredCategories`, `GetFilteredTodos`
 
----
-
-**Developed with .NET 10, WPF, and SQL Server**
-```
-
-Kısa, öz ve profesyonel! 🎯
