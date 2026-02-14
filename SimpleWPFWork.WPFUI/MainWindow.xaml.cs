@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Xceed.Wpf.Toolkit;
 
 namespace SimpleWPFWork.WPFUI
 {
@@ -35,12 +36,15 @@ namespace SimpleWPFWork.WPFUI
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 });
 
-            CategoryColorTextBox.SetBinding(TextBox.TextProperty,
-                new Binding("CategoryColor")
+            // ✅ ColorPicker Binding (Color → Hex String iki yönlü)
+            CategoryColorPicker.SelectedColorChanged += (s, e) =>
+            {
+                if (CategoryColorPicker.SelectedColor.HasValue)
                 {
-                    Source = _viewModel,
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
+                    var color = CategoryColorPicker.SelectedColor.Value;
+                    _viewModel.CategoryColor = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+                }
+            };
 
             // Todo List Binding
             TodosListBox.SetBinding(ItemsControl.ItemsSourceProperty,
@@ -89,12 +93,18 @@ namespace SimpleWPFWork.WPFUI
                 }
             };
 
-            // ✅ Category Selection değiştiğinde Delete butonunu göster/gizle
+            // ✅ ViewModel değişikliklerini dinle
             _viewModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(_viewModel.SelectedCategory))
                 {
                     UpdateCategoryDeleteButtonVisibility();
+                }
+
+                // ✅ ViewModel'deki CategoryColor değişince ColorPicker'ı güncelle
+                if (e.PropertyName == nameof(_viewModel.CategoryColor))
+                {
+                    UpdateColorPickerFromViewModel();
                 }
             };
         }
@@ -109,7 +119,6 @@ namespace SimpleWPFWork.WPFUI
             await _viewModel.SaveCategoryAsync();
         }
 
-        // ✅ Kategori Sil Event Handler
         private async void DeleteCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             await _viewModel.DeleteCategoryAsync();
@@ -141,6 +150,25 @@ namespace SimpleWPFWork.WPFUI
             else
             {
                 DeleteCategoryButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // ✅ ViewModel'deki hex string'i ColorPicker'a aktar
+        private void UpdateColorPickerFromViewModel()
+        {
+            try
+            {
+                var hexColor = _viewModel.CategoryColor;
+                if (!string.IsNullOrEmpty(hexColor))
+                {
+                    var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
+                    CategoryColorPicker.SelectedColor = color;
+                }
+            }
+            catch
+            {
+                // Invalid color format, set default
+                CategoryColorPicker.SelectedColor = System.Windows.Media.Colors.Blue;
             }
         }
     }

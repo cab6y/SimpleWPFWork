@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleWPFWork.WPFUI"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Todo Application" Height="750" Width="1000"
         WindowStartupLocation="CenterScreen"
@@ -26,6 +27,18 @@
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- ✅ ColorPicker Stili -->
+        <Style x:Key="ModernColorPicker" TargetType="xctk:ColorPicker">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ShowStandardColors" Value="True"/>
+            <Setter Property="ShowRecentColors" Value="True"/>
+            <Setter Property="DisplayColorAndName" Value="False"/>
+            <Setter Property="ColorMode" Value="ColorCanvas"/>
+            <Setter Property="UsingAlphaChannel" Value="False"/>
         </Style>
 
         <Style x:Key="GreenSaveButton" TargetType="Button">
@@ -106,7 +119,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- ✅ Kategori Delete Butonu İkonu Stili -->
         <Style x:Key="CategoryDeleteButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -173,18 +185,17 @@
                              Height="40"/>
                 </StackPanel>
 
-                <!-- Color Input -->
+                <!-- ✅ Color Picker -->
                 <StackPanel Grid.Column="4">
-                    <TextBlock Text="Color Input" 
+                    <TextBlock Text="Color Picker" 
                                FontSize="11" 
                                Foreground="#666666" 
                                Margin="0,0,0,8"/>
-                    <TextBox x:Name="CategoryColorTextBox" 
-                             Style="{StaticResource ModernTextBox}" 
-                             Height="40"/>
+                    <xctk:ColorPicker x:Name="CategoryColorPicker" 
+                                      Style="{StaticResource ModernColorPicker}"/>
                 </StackPanel>
 
-                <!-- ✅ Delete Category Button (Sadece kategori seçiliyse görünür) -->
+                <!-- Delete Category Button -->
                 <Button x:Name="DeleteCategoryButton"
                         Grid.Column="6" 
                         Content="🗑️" 

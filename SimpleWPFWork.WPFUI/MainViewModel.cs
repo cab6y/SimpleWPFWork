@@ -316,9 +316,11 @@ namespace SimpleWPFWork.WPFUI
             try
             {
                 IsLoading = true;
+                CategoryDto savedCategory = null;
 
                 if (SelectedCategory == null || SelectedCategory.Id == Guid.Empty)
                 {
+                    // YENİ KATEGORİ
                     StatusMessage = "Creating new category...";
                     var command = new CreateCategoryCommand
                     {
@@ -326,14 +328,22 @@ namespace SimpleWPFWork.WPFUI
                         Color = CategoryColor ?? "#3498DB"
                     };
 
-                    var newCategory = await _client.CategoryPOSTAsync(command);
-                    Categories.Add(newCategory);
-                    SelectedCategory = newCategory;
+                    savedCategory = await _client.CategoryPOSTAsync(command);
+                    Categories.Add(savedCategory);
+                    SelectedCategory = savedCategory;
+
+                    // ✅ Success Popup
+                    ModernMessageBox.Show(
+                        $"Category '{savedCategory.Name}' created successfully!",
+                        "Success",
+                        ModernMessageBox.MessageType.Success
+                    );
 
                     StatusMessage = "Category created successfully";
                 }
                 else
                 {
+                    // GÜNCELLEME
                     StatusMessage = "Updating category...";
                     var command = new UpdateCategoryCommand
                     {
@@ -342,14 +352,21 @@ namespace SimpleWPFWork.WPFUI
                         Color = CategoryColor ?? "#3498DB"
                     };
 
-                    var updatedCategory = await _client.CategoryPUTAsync(command);
+                    savedCategory = await _client.CategoryPUTAsync(command);
 
                     var index = Categories.IndexOf(SelectedCategory);
                     if (index >= 0)
                     {
-                        Categories[index] = updatedCategory;
-                        SelectedCategory = updatedCategory;
+                        Categories[index] = savedCategory;
+                        SelectedCategory = savedCategory;
                     }
+
+                    // ✅ Success Popup
+                    ModernMessageBox.Show(
+                        $"Category '{savedCategory.Name}' updated successfully!",
+                        "Success",
+                        ModernMessageBox.MessageType.Success
+                    );
 
                     StatusMessage = "Category updated successfully";
                 }
@@ -357,7 +374,13 @@ namespace SimpleWPFWork.WPFUI
             catch (ApiException ex)
             {
                 StatusMessage = "Failed to save category";
-                MessageBox.Show($"API Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // ✅ Error Popup
+                ModernMessageBox.Show(
+                    $"Failed to save category: {ex.Message}",
+                    "Error",
+                    ModernMessageBox.MessageType.Error
+                );
             }
             finally
             {
@@ -382,9 +405,11 @@ namespace SimpleWPFWork.WPFUI
             try
             {
                 IsLoading = true;
+                TodoDto savedTodo = null;
 
                 if (SelectedTodo == null)
                 {
+                    // YENİ TODO
                     StatusMessage = "Creating new todo...";
                     var command = new CreateTodoCommand
                     {
@@ -397,14 +422,22 @@ namespace SimpleWPFWork.WPFUI
                         Username = TodoUsername ?? Environment.UserName
                     };
 
-                    var newTodo = await _client.TodoPOSTAsync(command);
-                    TodosList.Insert(0, newTodo);
+                    savedTodo = await _client.TodoPOSTAsync(command);
+                    TodosList.Insert(0, savedTodo);
+
+                    // ✅ Success Popup
+                    ModernMessageBox.Show(
+                        $"Todo '{savedTodo.Title}' created successfully!",
+                        "Success",
+                        ModernMessageBox.MessageType.Success
+                    );
 
                     ClearTodoForm();
                     StatusMessage = "Todo created successfully";
                 }
                 else
                 {
+                    // GÜNCELLEME
                     StatusMessage = "Updating todo...";
                     var command = new UpdateTodoCommand
                     {
@@ -418,21 +451,37 @@ namespace SimpleWPFWork.WPFUI
                         Username = TodoUsername ?? Environment.UserName
                     };
 
-                    var updatedTodo = await _client.TodoPUTAsync(command);
+                    savedTodo = await _client.TodoPUTAsync(command);
 
                     var index = TodosList.IndexOf(SelectedTodo);
                     if (index >= 0)
                     {
-                        TodosList[index] = updatedTodo;
+                        TodosList[index] = savedTodo;
                     }
+
+                    // ✅ Success Popup
+                    ModernMessageBox.Show(
+                        $"Todo '{savedTodo.Title}' updated successfully!",
+                        "Success",
+                        ModernMessageBox.MessageType.Success
+                    );
 
                     StatusMessage = "Todo updated successfully";
                 }
+
+                // ✅ Kaydedilen todo'yu tekrar seç
+                SelectedTodo = savedTodo;
             }
             catch (ApiException ex)
             {
                 StatusMessage = "Failed to save todo";
-                MessageBox.Show($"API Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // ✅ Error Popup
+                ModernMessageBox.Show(
+                    $"Failed to save todo: {ex.Message}",
+                    "Error",
+                    ModernMessageBox.MessageType.Error
+                );
             }
             finally
             {
@@ -459,18 +508,33 @@ namespace SimpleWPFWork.WPFUI
             try
             {
                 IsLoading = true;
-                StatusMessage = $"Deleting '{SelectedTodo.Title}'...";
+                var deletedTitle = SelectedTodo.Title;
+                StatusMessage = $"Deleting '{deletedTitle}'...";
 
                 await _client.TodoDELETEAsync(SelectedTodo.Id);
                 TodosList.Remove(SelectedTodo);
 
                 ClearTodoForm();
+
+                // ✅ Success Popup
+                ModernMessageBox.Show(
+                    $"Todo '{deletedTitle}' deleted successfully!",
+                    "Success",
+                    ModernMessageBox.MessageType.Success
+                );
+
                 StatusMessage = "Todo deleted successfully";
             }
             catch (ApiException ex)
             {
                 StatusMessage = "Failed to delete todo";
-                MessageBox.Show($"API Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // ✅ Error Popup
+                ModernMessageBox.Show(
+                    $"Failed to delete todo: {ex.Message}",
+                    "Error",
+                    ModernMessageBox.MessageType.Error
+                );
             }
             finally
             {
@@ -520,21 +584,33 @@ namespace SimpleWPFWork.WPFUI
             try
             {
                 IsLoading = true;
-                StatusMessage = $"Deleting category '{SelectedCategory.Name}'...";
+                var deletedName = SelectedCategory.Name;
+                StatusMessage = $"Deleting category '{deletedName}'...";
 
                 await _client.CategoryDELETEAsync(SelectedCategory.Id);
 
                 Categories.Remove(SelectedCategory);
-
-                // Kategori silindikten sonra placeholder'ı seç
                 SelectedCategory = Categories.FirstOrDefault();
+
+                // ✅ Success Popup
+                ModernMessageBox.Show(
+                    $"Category '{deletedName}' deleted successfully!",
+                    "Success",
+                    ModernMessageBox.MessageType.Success
+                );
 
                 StatusMessage = "Category deleted successfully";
             }
             catch (ApiException ex)
             {
                 StatusMessage = "Failed to delete category";
-                MessageBox.Show($"API Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // ✅ Error Popup
+                ModernMessageBox.Show(
+                    $"Failed to delete category: {ex.Message}",
+                    "Error",
+                    ModernMessageBox.MessageType.Error
+                );
             }
             finally
             {
