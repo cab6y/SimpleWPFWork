@@ -7,5 +7,7 @@
           string? color = null,
           int page = 0,
           int limit = 100);
+
+        Task<Category> UpdateAsync(Category category);
     }
 }

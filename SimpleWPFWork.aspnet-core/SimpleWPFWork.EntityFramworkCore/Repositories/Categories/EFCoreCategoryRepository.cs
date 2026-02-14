@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.Domain.Entities.Categories;
 using SimpleWPFWork.EntityFrameworkCore;
@@ -63,6 +64,40 @@ namespace SimpleWPFWork.EntityFramworkCore.Repositories.Categories
             }
 
             return categories;
+        }
+        public async Task<Category> UpdateAsync(Category category)
+        {
+            var connection = _context.Database.GetDbConnection() as SqlConnection;
+
+            var sql = @"
+                UPDATE Categories 
+                SET 
+                    Name = @Name,
+                    Color = @Color,
+                    LastModificationTime = @LastModificationTime
+                WHERE Id = @Id;
+
+                SELECT 
+                    Id, Name, Color, CreationTime, LastModificationTime,
+                    DeleterUserId, DeletionTime, IsDeleted
+                FROM Categories 
+                WHERE Id = @Id;
+            ";
+
+            var parameters = new
+            {
+                category.Id,
+                category.Name,
+                category.Color,
+                LastModificationTime = DateTime.Now
+            };
+
+            if (connection.State != ConnectionState.Open)
+                await connection.OpenAsync();
+
+            var updatedCategory = await connection.QuerySingleAsync<Category>(sql, parameters);
+
+            return updatedCategory;
         }
     }
 }

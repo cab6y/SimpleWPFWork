@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.ApplicationContracts.Categories;
 using SimpleWPFWork.ApplicationContracts.Categories.Commands.UpdateCategory;
+using SimpleWPFWork.Domain.Entities.Categories;
 using SimpleWPFWork.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -12,30 +13,31 @@ namespace SimpleWPFWork.Application.Categories.Commands.UpdateCategory
 {
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, CategoryDto>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
         public UpdateCategoryCommandHandler(
-            SimpleWPFWorkDbContext context,
+            ICategoryRepository categoryRepository,
             IMapper mapper)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         public async Task<CategoryDto> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _context.Categories.FindAsync(new object[] { request.Id }, cancellationToken);
+            // ✅ Category nesnesini hazırla
+            var category = new Category
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Color = request.Color
+            };
 
-            if (category == null)
-                throw new Exception($"Kategori bulunamadı: {request.Id}");
+            // ✅ Dapper ile update
+            var updatedCategory = await _categoryRepository.UpdateAsync(category);
 
-            category.Name = request.Name;
-            category.Color = request.Color;
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<CategoryDto>(category);
+            return _mapper.Map<CategoryDto>(updatedCategory);
         }
     }
 }
