@@ -88,6 +88,15 @@ namespace SimpleWPFWork.WPFUI
                     _viewModel.TodoPriority = item.Content.ToString();
                 }
             };
+
+            // ✅ Category Selection değiştiğinde Delete butonunu göster/gizle
+            _viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(_viewModel.SelectedCategory))
+                {
+                    UpdateCategoryDeleteButtonVisibility();
+                }
+            };
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -98,6 +107,12 @@ namespace SimpleWPFWork.WPFUI
         private async void SaveCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             await _viewModel.SaveCategoryAsync();
+        }
+
+        // ✅ Kategori Sil Event Handler
+        private async void DeleteCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.DeleteCategoryAsync();
         }
 
         private async void SaveTodoButton_Click(object sender, RoutedEventArgs e)
@@ -113,7 +128,20 @@ namespace SimpleWPFWork.WPFUI
         private void TodosListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // ViewModel zaten SelectedTodo binding'i üzerinden todo seçimini yakalıyor
-            // Burada ekstra işlem yapmaya gerek yok
+        }
+
+        // ✅ Delete butonunu göster/gizle
+        private void UpdateCategoryDeleteButtonVisibility()
+        {
+            // Sadece gerçek kategori seçiliyse göster ("Create New" değilse)
+            if (_viewModel.SelectedCategory != null && _viewModel.SelectedCategory.Id != Guid.Empty)
+            {
+                DeleteCategoryButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                DeleteCategoryButton.Visibility = Visibility.Collapsed;
+            }
         }
     }
 

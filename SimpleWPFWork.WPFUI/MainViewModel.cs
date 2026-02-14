@@ -501,5 +501,45 @@ namespace SimpleWPFWork.WPFUI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public async Task DeleteCategoryAsync()
+        {
+            if (SelectedCategory == null || SelectedCategory.Id == Guid.Empty)
+            {
+                MessageBox.Show("Please select a category to delete", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete category '{SelectedCategory.Name}'?\n\nAll todos in this category will also be deleted!",
+                "Confirm Delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            try
+            {
+                IsLoading = true;
+                StatusMessage = $"Deleting category '{SelectedCategory.Name}'...";
+
+                await _client.CategoryDELETEAsync(SelectedCategory.Id);
+
+                Categories.Remove(SelectedCategory);
+
+                // Kategori silindikten sonra placeholder'ı seç
+                SelectedCategory = Categories.FirstOrDefault();
+
+                StatusMessage = "Category deleted successfully";
+            }
+            catch (ApiException ex)
+            {
+                StatusMessage = "Failed to delete category";
+                MessageBox.Show($"API Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
     }
 }
