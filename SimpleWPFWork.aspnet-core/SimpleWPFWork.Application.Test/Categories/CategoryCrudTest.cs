@@ -10,11 +10,11 @@ using Xunit;
 
 namespace SimpleWPFWork.Application.Test.Categories
 {
-    public class CategoryAppServiceTests : IClassFixture<TestFixture>
+    public class CategoryCrudTest : IClassFixture<TestFixture>
     {
         private readonly IMediator _mediator;
 
-        public CategoryAppServiceTests(TestFixture fixture)
+        public CategoryCrudTest(TestFixture fixture)
         {
             var scope = fixture.ServiceProvider.CreateScope();
             _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -38,7 +38,7 @@ namespace SimpleWPFWork.Application.Test.Categories
             var list = await _mediator.Send(new GetCategoryListQuery
             {
                 Page = 0,
-                Limit = 10
+                Limit = 100
             });
 
             Assert.NotNull(list);
