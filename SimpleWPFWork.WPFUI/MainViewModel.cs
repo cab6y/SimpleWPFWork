@@ -21,6 +21,7 @@ namespace SimpleWPFWork.WPFUI
             get => _selectedCategory;
             set
             {
+                if (_selectedCategory == value) return; // ✅ SONSUZ DÖNGÜYÜ ÖNLE!
                 _selectedCategory = value;
                 OnPropertyChanged();
                 OnCategorySelected();
@@ -31,14 +32,24 @@ namespace SimpleWPFWork.WPFUI
         public string CategoryName
         {
             get => _categoryName;
-            set { _categoryName = value; OnPropertyChanged(); }
+            set
+            {
+                if (_categoryName == value) return; // ✅
+                _categoryName = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _categoryColor;
         public string CategoryColor
         {
             get => _categoryColor;
-            set { _categoryColor = value; OnPropertyChanged(); }
+            set
+            {
+                if (_categoryColor == value) return; // ✅
+                _categoryColor = value;
+                OnPropertyChanged();
+            }
         }
 
         // Todos
@@ -49,6 +60,7 @@ namespace SimpleWPFWork.WPFUI
             get => _selectedTodo;
             set
             {
+                if (_selectedTodo == value) return; // ✅
                 _selectedTodo = value;
                 OnPropertyChanged();
                 OnTodoSelected();
@@ -60,42 +72,72 @@ namespace SimpleWPFWork.WPFUI
         public string TodoTitle
         {
             get => _todoTitle;
-            set { _todoTitle = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoTitle == value) return; // ✅
+                _todoTitle = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _todoDescription;
         public string TodoDescription
         {
             get => _todoDescription;
-            set { _todoDescription = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoDescription == value) return; // ✅
+                _todoDescription = value;
+                OnPropertyChanged();
+            }
         }
 
         private bool _todoIsCompleted;
         public bool TodoIsCompleted
         {
             get => _todoIsCompleted;
-            set { _todoIsCompleted = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoIsCompleted == value) return; // ✅
+                _todoIsCompleted = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _todoPriority;
         public string TodoPriority
         {
             get => _todoPriority;
-            set { _todoPriority = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoPriority == value) return; // ✅
+                _todoPriority = value;
+                OnPropertyChanged();
+            }
         }
 
         private DateTimeOffset _todoDueDate;
         public DateTimeOffset TodoDueDate
         {
             get => _todoDueDate;
-            set { _todoDueDate = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoDueDate == value) return; // ✅
+                _todoDueDate = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _todoUsername;
         public string TodoUsername
         {
             get => _todoUsername;
-            set { _todoUsername = value; OnPropertyChanged(); }
+            set
+            {
+                if (_todoUsername == value) return; // ✅
+                _todoUsername = value;
+                OnPropertyChanged();
+            }
         }
 
         // UI States
@@ -103,21 +145,36 @@ namespace SimpleWPFWork.WPFUI
         public bool IsLoading
         {
             get => _isLoading;
-            set { _isLoading = value; OnPropertyChanged(); }
+            set
+            {
+                if (_isLoading == value) return; // ✅
+                _isLoading = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _statusMessage;
         public string StatusMessage
         {
             get => _statusMessage;
-            set { _statusMessage = value; OnPropertyChanged(); }
+            set
+            {
+                if (_statusMessage == value) return; // ✅
+                _statusMessage = value;
+                OnPropertyChanged();
+            }
         }
 
         private bool _isTodoFormEnabled;
         public bool IsTodoFormEnabled
         {
             get => _isTodoFormEnabled;
-            set { _isTodoFormEnabled = value; OnPropertyChanged(); }
+            set
+            {
+                if (_isTodoFormEnabled == value) return; // ✅
+                _isTodoFormEnabled = value;
+                OnPropertyChanged();
+            }
         }
 
         public MainViewModel(IClient client)
@@ -139,15 +196,24 @@ namespace SimpleWPFWork.WPFUI
                 IsLoading = true;
                 StatusMessage = "Loading categories...";
 
-                // API: CategoryAllAsync(string name, string color, int? limit, int? page)
                 var categories = await _client.CategoryAllAsync(null, null, 100, 0);
+
                 Categories.Clear();
+
+                // İlk sıraya placeholder ekle
+                Categories.Add(new CategoryDto
+                {
+                    Id = Guid.Empty,
+                    Name = "-- Create New Category --",
+                    Color = "#CCCCCC"
+                });
+
                 foreach (var category in categories)
                 {
                     Categories.Add(category);
                 }
 
-                StatusMessage = $"Loaded {Categories.Count} categories";
+                StatusMessage = $"Loaded {categories.Count} categories";
             }
             catch (ApiException ex)
             {
@@ -167,23 +233,21 @@ namespace SimpleWPFWork.WPFUI
 
         private async void OnCategorySelected()
         {
-            if (SelectedCategory != null)
+            if (SelectedCategory == null || SelectedCategory.Id == Guid.Empty)
             {
-                // Kategori seçildi - bilgilerini forma aktar
-                CategoryName = SelectedCategory.Name;
-                CategoryColor = SelectedCategory.Color;
-
-                // Todo listesini yükle
-                await LoadTodosByCategoryAsync(SelectedCategory.Id);
-                IsTodoFormEnabled = true;
-            }
-            else
-            {
-                // Kategori seçimi kaldırıldı
+                CategoryName = string.Empty;
+                CategoryColor = "#3498DB";
                 TodosList.Clear();
                 IsTodoFormEnabled = false;
                 ClearTodoForm();
+                StatusMessage = "Ready to create new category";
+                return;
             }
+
+            CategoryName = SelectedCategory.Name;
+            CategoryColor = SelectedCategory.Color;
+            await LoadTodosByCategoryAsync(SelectedCategory.Id);
+            IsTodoFormEnabled = true;
         }
 
         private async Task LoadTodosByCategoryAsync(Guid categoryId)
@@ -193,16 +257,13 @@ namespace SimpleWPFWork.WPFUI
                 IsLoading = true;
                 StatusMessage = "Loading todos...";
 
-                // API: TodoAllAsync(string title, string description, bool? isCompleted, 
-                //                   string priority, DateTimeOffset? dueDate, Guid? categoryId, 
-                //                   string username, int? limit, int? page)
                 var todos = await _client.TodoAllAsync(
                     title: null,
                     description: null,
                     isCompleted: null,
                     priority: null,
                     dueDate: null,
-                    categoryId: categoryId,  // ✅ GUID olarak gönderiliyor
+                    categoryId: categoryId,
                     username: null,
                     limit: 100,
                     page: 0
@@ -231,7 +292,6 @@ namespace SimpleWPFWork.WPFUI
         {
             if (SelectedTodo != null)
             {
-                // Todo seçildi - bilgilerini forma aktar
                 TodoTitle = SelectedTodo.Title;
                 TodoDescription = SelectedTodo.Description;
                 TodoIsCompleted = SelectedTodo.IsCompleted;
@@ -241,7 +301,6 @@ namespace SimpleWPFWork.WPFUI
             }
             else
             {
-                // Todo seçimi kaldırıldı - formu temizle
                 ClearTodoForm();
             }
         }
@@ -258,9 +317,8 @@ namespace SimpleWPFWork.WPFUI
             {
                 IsLoading = true;
 
-                if (SelectedCategory == null)
+                if (SelectedCategory == null || SelectedCategory.Id == Guid.Empty)
                 {
-                    // YENİ KATEGORİ
                     StatusMessage = "Creating new category...";
                     var command = new CreateCategoryCommand
                     {
@@ -276,18 +334,16 @@ namespace SimpleWPFWork.WPFUI
                 }
                 else
                 {
-                    // GÜNCELLEME
                     StatusMessage = "Updating category...";
                     var command = new UpdateCategoryCommand
                     {
-                        Id = SelectedCategory.Id,  // ✅ GUID
+                        Id = SelectedCategory.Id,
                         Name = CategoryName,
                         Color = CategoryColor ?? "#3498DB"
                     };
 
                     var updatedCategory = await _client.CategoryPUTAsync(command);
 
-                    // Listedeki kategoriyi güncelle
                     var index = Categories.IndexOf(SelectedCategory);
                     if (index >= 0)
                     {
@@ -311,7 +367,7 @@ namespace SimpleWPFWork.WPFUI
 
         public async Task SaveTodoAsync()
         {
-            if (SelectedCategory == null)
+            if (SelectedCategory == null || SelectedCategory.Id == Guid.Empty)
             {
                 MessageBox.Show("Please select a category first", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -329,7 +385,6 @@ namespace SimpleWPFWork.WPFUI
 
                 if (SelectedTodo == null)
                 {
-                    // YENİ TODO
                     StatusMessage = "Creating new todo...";
                     var command = new CreateTodoCommand
                     {
@@ -338,7 +393,7 @@ namespace SimpleWPFWork.WPFUI
                         IsCompleted = TodoIsCompleted,
                         Priority = TodoPriority ?? "Normal",
                         DueDate = TodoDueDate,
-                        CategoryId = SelectedCategory.Id,  // ✅ GUID
+                        CategoryId = SelectedCategory.Id,
                         Username = TodoUsername ?? Environment.UserName
                     };
 
@@ -350,23 +405,21 @@ namespace SimpleWPFWork.WPFUI
                 }
                 else
                 {
-                    // GÜNCELLEME
                     StatusMessage = "Updating todo...";
                     var command = new UpdateTodoCommand
                     {
-                        Id = SelectedTodo.Id,  // ✅ GUID
+                        Id = SelectedTodo.Id,
                         Title = TodoTitle,
                         Description = TodoDescription,
                         IsCompleted = TodoIsCompleted,
                         Priority = TodoPriority ?? "Normal",
                         DueDate = TodoDueDate,
-                        CategoryId = SelectedCategory.Id,  // ✅ GUID
+                        CategoryId = SelectedCategory.Id,
                         Username = TodoUsername ?? Environment.UserName
                     };
 
                     var updatedTodo = await _client.TodoPUTAsync(command);
 
-                    // Listedeki todo'yu güncelle
                     var index = TodosList.IndexOf(SelectedTodo);
                     if (index >= 0)
                     {
@@ -408,7 +461,7 @@ namespace SimpleWPFWork.WPFUI
                 IsLoading = true;
                 StatusMessage = $"Deleting '{SelectedTodo.Title}'...";
 
-                await _client.TodoDELETEAsync(SelectedTodo.Id);  // ✅ GUID
+                await _client.TodoDELETEAsync(SelectedTodo.Id);
                 TodosList.Remove(SelectedTodo);
 
                 ClearTodoForm();
@@ -446,14 +499,7 @@ namespace SimpleWPFWork.WPFUI
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            try
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-            catch
-            {
-
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
