@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SimpleWPFWork.EntityFrameworkCore;
 using SimpleWPFWork.EntityFrameworkCore.Seed.Procedures.Todos;
+using SimpleWPFWork.EntityFramworkCore.Seed.Procedures.Categories;
 
 Console.WriteLine("=== Database Migration & Seeding ===");
 Console.WriteLine();
@@ -30,6 +31,7 @@ using (var context = new SimpleWPFWorkDbContext(optionsBuilder.Options))
     // 2️⃣ Stored Procedures seed et
     Console.WriteLine("Seeding stored procedures...");
     await TodoProcedureSeed.SeedAsync(context);
+    await CategoryProcedureSeed.SeedAsync(context);
     Console.WriteLine("Stored procedures seeded successfully!");
     Console.WriteLine();
 }

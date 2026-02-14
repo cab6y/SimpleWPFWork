@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 using SimpleWPFWork.Application.Common.Behaviors;
+using SimpleWPFWork.Domain.Entities.Categories;
 using SimpleWPFWork.Domain.Entities.Todos;
-using SimpleWPFWork.EntityFrameworkCore.Todos;
+using SimpleWPFWork.EntityFramworkCore.Repositories.Categories;
+using SimpleWPFWork.EntityFramworkCore.Repositories.Todos;
 using System.Reflection;
 
 namespace SimpleWPFWork.Application
@@ -30,6 +32,7 @@ namespace SimpleWPFWork.Application
             // FluentValidation
             services.AddValidatorsFromAssembly(assembly);
             services.AddScoped<ITodoRepository, EFCoreTodoRepository>();
+            services.AddScoped<ICategoryRepository, EFCoreCategoryRepository>();
 
 
 

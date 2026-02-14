@@ -1,12 +1,13 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.Domain.Entities.Todos;
+using SimpleWPFWork.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace SimpleWPFWork.EntityFrameworkCore.Todos
+namespace SimpleWPFWork.EntityFramworkCore.Repositories.Todos
 {
     public class EFCoreTodoRepository : ITodoRepository
     {

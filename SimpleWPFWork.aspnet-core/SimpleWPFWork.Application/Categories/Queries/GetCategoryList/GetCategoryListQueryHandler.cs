@@ -1,41 +1,34 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.ApplicationContracts.Categories;
 using SimpleWPFWork.ApplicationContracts.Categories.Queries.GetCategoryList;
-using SimpleWPFWork.EntityFrameworkCore;
+using SimpleWPFWork.Domain.Entities.Categories;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleWPFWork.Application.Categories.Queries.GetCategoryList
 {
     public class GetCategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, List<CategoryDto>>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
         public GetCategoryListQueryHandler(
-            SimpleWPFWorkDbContext context,
+            ICategoryRepository categoryRepository,
             IMapper mapper)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         public async Task<List<CategoryDto>> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Categories.AsQueryable();
-
-            // Filtreleme
-            if (!string.IsNullOrWhiteSpace(request.Name))
-                query = query.Where(c => c.Name.Contains(request.Name));
-
-            if (!string.IsNullOrWhiteSpace(request.Color))
-                query = query.Where(c => c.Color == request.Color);
-
-            // Sayfalama
-            var categories = await query
-                .Skip((int)request.Page * (int)request.Limit)
-                .Take((int)request.Limit)
-                .ToListAsync(cancellationToken);
+            var categories = await _categoryRepository.GetFilteredAsync(
+                name: request.Name,
+                color: request.Color,
+                page: (int)request.Page,
+                limit: (int)request.Limit);
 
             return _mapper.Map<List<CategoryDto>>(categories);
         }
