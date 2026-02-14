@@ -5,8 +5,402 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleWPFWork.WPFUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Todo Application" Height="750" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
 
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style x:Key="GreenSaveButton" TargetType="Button">
+            <Setter Property="Background" Value="#00D9A3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#00C794"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DeleteButton" TargetType="Button">
+            <Setter Property="Background" Value="#E74C3C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C0392B"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SaveButton" TargetType="Button">
+            <Setter Property="Background" Value="#00D9A3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#00C794"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ÜSTT KATEGORİ PANELİ -->
+        <Border Grid.Row="0" 
+                Background="White" 
+                BorderBrush="#E0E0E0" 
+                BorderThickness="1" 
+                CornerRadius="5" 
+                Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Categories ComboBox -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="▼ Categories (combobox)" 
+                               FontSize="11" 
+                               Foreground="#666666" 
+                               Margin="0,0,0,8"/>
+                    <ComboBox x:Name="CategoriesComboBox" 
+                              Style="{StaticResource ModernComboBox}"
+                              DisplayMemberPath="Name"
+                              Height="40"/>
+                </StackPanel>
+
+                <!-- Name Input -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Name Input" 
+                               FontSize="11" 
+                               Foreground="#666666" 
+                               Margin="0,0,0,8"/>
+                    <TextBox x:Name="CategoryNameTextBox" 
+                             Style="{StaticResource ModernTextBox}" 
+                             Height="40"/>
+                </StackPanel>
+
+                <!-- Color Input -->
+                <StackPanel Grid.Column="4">
+                    <TextBlock Text="Color Input" 
+                               FontSize="11" 
+                               Foreground="#666666" 
+                               Margin="0,0,0,8"/>
+                    <TextBox x:Name="CategoryColorTextBox" 
+                             Style="{StaticResource ModernTextBox}" 
+                             Height="40"/>
+                </StackPanel>
+
+                <!-- Save Button -->
+                <Button Grid.Column="6" 
+                        Content="Save" 
+                        Style="{StaticResource GreenSaveButton}"
+                        VerticalAlignment="Bottom" 
+                        Height="40" 
+                        MinWidth="120"
+                        Click="SaveCategoryButton_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- ALT TODO PANELİ -->
+        <Border Grid.Row="2" 
+                Background="White" 
+                BorderBrush="#E0E0E0" 
+                BorderThickness="1" 
+                CornerRadius="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- SOL - TODOS LIST -->
+                <Border Grid.Column="0" 
+                        BorderBrush="#E0E0E0" 
+                        BorderThickness="0,0,1,0"
+                        Padding="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" 
+                                   Text="Todos List" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,15"/>
+
+                        <ListBox x:Name="TodosListBox" 
+                                 Grid.Row="1" 
+                                 BorderThickness="0"
+                                 SelectionChanged="TodosListBox_SelectionChanged">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="12"/>
+                                    <Setter Property="Margin" Value="0,0,0,8"/>
+                                    <Setter Property="Background" Value="#F8F8F8"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#E3F2FD"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#EEEEEE"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Title}" 
+                                               FontSize="13" 
+                                               TextTrimming="CharacterEllipsis"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+
+                <!-- SAĞ - TODO FORM -->
+                <Grid Grid.Column="1">
+                    <!-- Ana içerik Border ile padding -->
+                    <Border Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Todo" 
+                                       FontSize="16" 
+                                       FontWeight="Bold" 
+                                       Margin="0,0,0,20"/>
+
+                            <!-- Form Fields -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="15"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="15"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="15"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="15"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Title -->
+                                <StackPanel Grid.Row="0" Grid.Column="0">
+                                    <TextBlock Text="Title (string)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <TextBox x:Name="TitleTextBox" 
+                                             Style="{StaticResource ModernTextBox}" 
+                                             Height="40"/>
+                                </StackPanel>
+
+                                <!-- DueDate -->
+                                <StackPanel Grid.Row="0" Grid.Column="2">
+                                    <TextBlock Text="DueDate (datetime)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <DatePicker x:Name="DueDatePicker" 
+                                                Height="40" 
+                                                BorderBrush="#CCCCCC"
+                                                BorderThickness="1"/>
+                                </StackPanel>
+
+                                <!-- Description -->
+                                <StackPanel Grid.Row="2" Grid.Column="0">
+                                    <TextBlock Text="Description (string)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <TextBox x:Name="DescriptionTextBox" 
+                                             Style="{StaticResource ModernTextBox}" 
+                                             Height="40"/>
+                                </StackPanel>
+
+                                <!-- Username -->
+                                <StackPanel Grid.Row="2" Grid.Column="2">
+                                    <TextBlock Text="Username (string)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <TextBox x:Name="UsernameTextBox" 
+                                             Style="{StaticResource ModernTextBox}" 
+                                             Height="40"/>
+                                </StackPanel>
+
+                                <!-- IsCompleted -->
+                                <StackPanel Grid.Row="4" Grid.Column="0">
+                                    <TextBlock Text="IsCompleted (boolean)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <CheckBox x:Name="IsCompletedCheckBox" 
+                                              Content="Completed" 
+                                              Padding="10" 
+                                              FontSize="13" 
+                                              Height="40" 
+                                              VerticalContentAlignment="Center"/>
+                                </StackPanel>
+
+                                <!-- Priority -->
+                                <StackPanel Grid.Row="6" Grid.Column="0">
+                                    <TextBlock Text="Priority (int)" 
+                                               FontSize="11" 
+                                               Foreground="#666666" 
+                                               Margin="0,0,0,8"/>
+                                    <ComboBox x:Name="PriorityComboBox" 
+                                              Style="{StaticResource ModernComboBox}" 
+                                              Height="40">
+                                        <ComboBoxItem Content="Low"/>
+                                        <ComboBoxItem Content="Normal" IsSelected="True"/>
+                                        <ComboBoxItem Content="High"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Action Buttons -->
+                            <StackPanel Grid.Row="2" 
+                                        Orientation="Horizontal" 
+                                        HorizontalAlignment="Right" 
+                                        Margin="0,20,0,0">
+                                <!-- Delete Button -->
+                                <Button Content="🗑️ DELETE" 
+                                        Style="{StaticResource DeleteButton}" 
+                                        Click="DeleteTodoButton_Click"
+                                        Margin="0,0,10,0"
+                                        ToolTip="Delete Todo"/>
+
+                                <!-- Save Button -->
+                                <Button Content="💾 SAVE" 
+                                        Style="{StaticResource SaveButton}" 
+                                        Click="SaveTodoButton_Click"
+                                        ToolTip="Save Todo"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Todo Form Disabled Overlay - Grid üzerinde, Border'ın dışında -->
+                    <Border Background="#CCF5F5F5">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsTodoFormEnabled}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="⚠️ Please select a category first" 
+                                   FontSize="16" 
+                                   Foreground="#666666" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Loading Overlay -->
+        <Border Grid.Row="0" Grid.RowSpan="3" 
+                Background="#CC000000" 
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="⏳" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <TextBlock Text="Loading..." 
+                           Foreground="White" 
+                           FontSize="18" 
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
