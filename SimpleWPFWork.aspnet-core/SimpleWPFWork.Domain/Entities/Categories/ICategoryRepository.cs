@@ -9,5 +9,8 @@
           int limit = 100);
 
         Task<Category> UpdateAsync(Category category);
+        Task<Category> GetAsync(Guid id);
+        Task<Category> CreateAsync(Category input);
+        Task DeleteAsync(Guid id);
     }
 }

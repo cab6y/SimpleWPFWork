@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SimpleWPFWork.ApplicationContracts.Categories;
 using SimpleWPFWork.ApplicationContracts.Categories.Commands.UpdateCategory;
 using SimpleWPFWork.Domain.Entities.Categories;
-using SimpleWPFWork.EntityFrameworkCore;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace SimpleWPFWork.Application.Categories.Commands.UpdateCategory
 {
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, CategoryDto>

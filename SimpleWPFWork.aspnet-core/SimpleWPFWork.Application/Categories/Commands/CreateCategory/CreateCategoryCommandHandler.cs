@@ -12,14 +12,14 @@ namespace SimpleWPFWork.Application.Categories.Commands.CreateCategory
 {
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
         public CreateCategoryCommandHandler(
-            SimpleWPFWorkDbContext context,
+            ICategoryRepository categoryRepository,
             IMapper mapper)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -31,8 +31,7 @@ namespace SimpleWPFWork.Application.Categories.Commands.CreateCategory
                 Color = request.Color
             };
 
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _categoryRepository.CreateAsync(category);
 
             return _mapper.Map<CategoryDto>(category);
         }

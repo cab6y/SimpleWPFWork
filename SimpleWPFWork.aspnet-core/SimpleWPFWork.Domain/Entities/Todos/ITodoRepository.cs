@@ -17,5 +17,8 @@ namespace SimpleWPFWork.Domain.Entities.Todos
              int page = 0,
              int limit = 100);
         Task<Todo> UpdateAsync(Todo todo);
+        Task<Todo> CreateAsync(Todo input);
+        Task DeleteAsync(Guid id);
+        Task<Todo> GetAsync(Guid id);
     }
 }

@@ -18,6 +18,24 @@ namespace SimpleWPFWork.EntityFramworkCore.Repositories.Categories
         {
             _context = context;
         }
+        public async Task<Category> CreateAsync(Category input) { 
+            _context.Categories.Add(input);
+            await _context.SaveChangesAsync();
+            return input;
+        }
+        public async Task DeleteAsync(Guid id)
+        {
+            var find = await _context.Categories.FindAsync(id);
+            if (find != null)
+            {
+                _context.Categories.Remove(find);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task<Category> GetAsync(Guid id)
+        {
+            return await _context.Categories.FindAsync(id);
+        }
         public async Task<List<Category>> GetFilteredAsync(
            string? name = null,
            string? color = null,

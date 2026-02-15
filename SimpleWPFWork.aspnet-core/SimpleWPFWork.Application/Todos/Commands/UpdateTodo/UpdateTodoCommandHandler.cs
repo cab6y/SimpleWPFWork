@@ -3,7 +3,6 @@ using MediatR;
 using SimpleWPFWork.ApplicationContracts.Todos;
 using SimpleWPFWork.ApplicationContracts.Todos.Commands.UpdateTodo;
 using SimpleWPFWork.Domain.Entities.Todos;
-using SimpleWPFWork.EntityFrameworkCore;
 
 namespace SimpleWPFWork.Application.Todos.Commands.UpdateTodo
 {

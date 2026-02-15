@@ -2,6 +2,7 @@
 using MediatR;
 using SimpleWPFWork.ApplicationContracts.Categories;
 using SimpleWPFWork.ApplicationContracts.Categories.Queries.GetCategory;
+using SimpleWPFWork.Domain.Entities.Categories;
 using SimpleWPFWork.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -11,20 +12,20 @@ namespace SimpleWPFWork.Application.Categories.Queries.GetCategory
 {
     public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, CategoryDto>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
         public GetCategoryQueryHandler(
-            SimpleWPFWorkDbContext context,
+            ICategoryRepository categoryRepository,
             IMapper mapper)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         public async Task<CategoryDto> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
         {
-            var category = await _context.Categories.FindAsync(new object[] { request.Id }, cancellationToken);
+            var category = await _categoryRepository.GetAsync(request.Id);
 
             if (category == null)
                 throw new Exception($"Kategori bulunamadı: {request.Id}");

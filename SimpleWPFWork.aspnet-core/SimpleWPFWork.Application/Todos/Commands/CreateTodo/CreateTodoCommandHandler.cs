@@ -15,14 +15,14 @@ namespace SimpleWPFWork.Application.Todos.Commands.CreateTodo
 {
     public class CreateTodoCommandHandler : IRequestHandler<CreateTodoCommand, TodoDto>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ITodoRepository _todoRepository;
         private readonly IMapper _mapper;
 
         public CreateTodoCommandHandler(
-            SimpleWPFWorkDbContext context,
+            ITodoRepository todoRepository,
             IMapper mapper)
         {
-            _context = context;
+            _todoRepository = todoRepository;
             _mapper = mapper;
         }
 
@@ -39,8 +39,7 @@ namespace SimpleWPFWork.Application.Todos.Commands.CreateTodo
                 Username = request.Username
             };
 
-            _context.Todos.Add(todo);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoRepository.CreateAsync(todo);
 
             return _mapper.Map<TodoDto>(todo);
         }

@@ -1,14 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Scrutor;
 using SimpleWPFWork.Application.Common.Behaviors;
 using SimpleWPFWork.Domain.Entities.Categories;
 using SimpleWPFWork.Domain.Entities.Todos;
 using SimpleWPFWork.EntityFramworkCore.Repositories.Categories;
 using SimpleWPFWork.EntityFramworkCore.Repositories.Todos;
-using System.Reflection;
-
 namespace SimpleWPFWork.Application
 {
     public static class ServiceCollectionExtensions

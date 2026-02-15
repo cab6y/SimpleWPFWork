@@ -2,26 +2,27 @@
 using MediatR;
 using SimpleWPFWork.ApplicationContracts.Todos;
 using SimpleWPFWork.ApplicationContracts.Todos.Queries.GetTodo;
+using SimpleWPFWork.Domain.Entities.Todos;
 using SimpleWPFWork.EntityFrameworkCore;
 
 namespace SimpleWPFWork.Application.Todos.Queries.GetTodo
 {
     internal class GetTodoQueryHandler : IRequestHandler<GetTodoQuery, TodoDto>
     {
-        private readonly SimpleWPFWorkDbContext _context;
+        private readonly ITodoRepository _todoRepository;
         private readonly IMapper _mapper;
 
         public GetTodoQueryHandler(
-            SimpleWPFWorkDbContext context,
-            IMapper mapper)
+            ITodoRepository todoRepository,
+        IMapper mapper)
         {
-            _context = context;
+            _todoRepository = todoRepository;
             _mapper = mapper;
         }
 
         public async Task<TodoDto> Handle(GetTodoQuery request, CancellationToken cancellationToken)
         {
-            var todo = await _context.Todos.FindAsync(new object[] { request.Id }, cancellationToken);
+            var todo = await _todoRepository.GetAsync(request.Id);
 
             if (todo == null)
                 throw new Exception($"Todo bulunamadı: {request.Id}");

@@ -18,7 +18,26 @@ namespace SimpleWPFWork.EntityFramworkCore.Repositories.Todos
         {
             _context = context;
         }
+        public async Task<Todo> CreateAsync(Todo input)
+        {
+            _context.Todos.Add(input);
+            await _context.SaveChangesAsync();
+            return input;
 
+        }
+        public async Task DeleteAsync(Guid id)
+        {
+            var todo = await _context.Todos.FindAsync(id);
+            if (todo != null)
+            {
+                _context.Todos.Remove(todo);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task<Todo> GetAsync(Guid id)
+        {
+            return await _context.Todos.FindAsync(id);
+        }
         public async Task<List<Todo>> GetFilteredAsync(
             string? title = null,
             string? description = null,
