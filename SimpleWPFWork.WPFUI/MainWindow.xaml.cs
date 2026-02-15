@@ -36,7 +36,7 @@ namespace SimpleWPFWork.WPFUI
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 });
 
-            // ✅ ColorPicker Binding (Color → Hex String iki yönlü)
+            //  ColorPicker Binding (Color → Hex String iki yönlü)
             CategoryColorPicker.SelectedColorChanged += (s, e) =>
             {
                 if (CategoryColorPicker.SelectedColor.HasValue)
@@ -93,7 +93,7 @@ namespace SimpleWPFWork.WPFUI
                 }
             };
 
-            // ✅ ViewModel değişikliklerini dinle
+            //  ViewModel değişikliklerini dinle
             _viewModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(_viewModel.SelectedCategory))
@@ -101,7 +101,7 @@ namespace SimpleWPFWork.WPFUI
                     UpdateCategoryDeleteButtonVisibility();
                 }
 
-                // ✅ ViewModel'deki CategoryColor değişince ColorPicker'ı güncelle
+                //  ViewModel'deki CategoryColor değişince ColorPicker'ı güncelle
                 if (e.PropertyName == nameof(_viewModel.CategoryColor))
                 {
                     UpdateColorPickerFromViewModel();
@@ -139,7 +139,7 @@ namespace SimpleWPFWork.WPFUI
             // ViewModel zaten SelectedTodo binding'i üzerinden todo seçimini yakalıyor
         }
 
-        // ✅ Delete butonunu göster/gizle
+        // Delete butonunu göster/gizle
         private void UpdateCategoryDeleteButtonVisibility()
         {
             // Sadece gerçek kategori seçiliyse göster ("Create New" değilse)
@@ -153,7 +153,7 @@ namespace SimpleWPFWork.WPFUI
             }
         }
 
-        // ✅ ViewModel'deki hex string'i ColorPicker'a aktar
+        //  ViewModel'deki hex string'i ColorPicker'a aktar
         private void UpdateColorPickerFromViewModel()
         {
             try
@@ -173,6 +173,7 @@ namespace SimpleWPFWork.WPFUI
         }
     }
 
+    // DİKKAT: Bu converter'lar MainWindow CLASS'ININ DIŞINDA olmalı!
     // DateTimeOffset <-> DateTime Converter
     public class DateTimeOffsetToDateTimeConverter : IValueConverter
     {
@@ -192,6 +193,32 @@ namespace SimpleWPFWork.WPFUI
                 return new DateTimeOffset(dt);
             }
             return DateTimeOffset.Now;
+        }
+    }
+
+    // Hex String → Brush Converter
+    public class HexColorToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is string hexColor && !string.IsNullOrEmpty(hexColor))
+            {
+                try
+                {
+                    var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hexColor);
+                    return new System.Windows.Media.SolidColorBrush(color);
+                }
+                catch
+                {
+                    return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Gray);
+                }
+            }
+            return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Gray);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

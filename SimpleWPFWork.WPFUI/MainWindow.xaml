@@ -12,6 +12,7 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <local:HexColorToBrushConverter x:Key="HexToBrush"/>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Padding" Value="10"/>
@@ -29,7 +30,7 @@
             <Setter Property="Background" Value="White"/>
         </Style>
 
-        <!-- ✅ ColorPicker Stili -->
+        <!--  ColorPicker Stili -->
         <Style x:Key="ModernColorPicker" TargetType="xctk:ColorPicker">
             <Setter Property="Height" Value="40"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
@@ -165,13 +166,37 @@
                 <!-- Categories ComboBox -->
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="▼ Categories (combobox)" 
-                               FontSize="11" 
-                               Foreground="#666666" 
-                               Margin="0,0,0,8"/>
+               FontSize="11" 
+               Foreground="#666666" 
+               Margin="0,0,0,8"/>
                     <ComboBox x:Name="CategoriesComboBox" 
-                              Style="{StaticResource ModernComboBox}"
-                              DisplayMemberPath="Name"
-                              Height="40"/>
+              Style="{StaticResource ModernComboBox}"
+              Height="40">
+
+                        <!--  SADECE ItemTemplate kullan -->
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Sol tarafta renk çubuğu -->
+                                    <Border Grid.Column="0" 
+                            Background="{Binding Color, Converter={StaticResource HexToBrush}}"
+                            CornerRadius="2"/>
+
+                                    <!-- Kategori adı -->
+                                    <TextBlock Grid.Column="2" 
+                               Text="{Binding Name}"
+                               VerticalAlignment="Center"
+                               FontSize="13"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
 
                 <!-- Name Input -->
@@ -185,7 +210,7 @@
                              Height="40"/>
                 </StackPanel>
 
-                <!-- ✅ Color Picker -->
+                <!--  Color Picker -->
                 <StackPanel Grid.Column="4">
                     <TextBlock Text="Color Picker" 
                                FontSize="11" 

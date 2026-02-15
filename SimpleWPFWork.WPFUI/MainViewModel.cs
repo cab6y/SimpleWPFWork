@@ -21,7 +21,7 @@ namespace SimpleWPFWork.WPFUI
             get => _selectedCategory;
             set
             {
-                if (_selectedCategory == value) return; // ✅ SONSUZ DÖNGÜYÜ ÖNLE!
+                if (_selectedCategory == value) return; //  SONSUZ DÖNGÜYÜ ÖNLE!
                 _selectedCategory = value;
                 OnPropertyChanged();
                 OnCategorySelected();
@@ -34,7 +34,7 @@ namespace SimpleWPFWork.WPFUI
             get => _categoryName;
             set
             {
-                if (_categoryName == value) return; // ✅
+                if (_categoryName == value) return; // 
                 _categoryName = value;
                 OnPropertyChanged();
             }
@@ -46,7 +46,7 @@ namespace SimpleWPFWork.WPFUI
             get => _categoryColor;
             set
             {
-                if (_categoryColor == value) return; // ✅
+                if (_categoryColor == value) return; // 
                 _categoryColor = value;
                 OnPropertyChanged();
             }
@@ -60,7 +60,7 @@ namespace SimpleWPFWork.WPFUI
             get => _selectedTodo;
             set
             {
-                if (_selectedTodo == value) return; // ✅
+                if (_selectedTodo == value) return; // 
                 _selectedTodo = value;
                 OnPropertyChanged();
                 OnTodoSelected();
@@ -74,7 +74,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoTitle;
             set
             {
-                if (_todoTitle == value) return; // ✅
+                if (_todoTitle == value) return; // 
                 _todoTitle = value;
                 OnPropertyChanged();
             }
@@ -86,7 +86,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoDescription;
             set
             {
-                if (_todoDescription == value) return; // ✅
+                if (_todoDescription == value) return; // 
                 _todoDescription = value;
                 OnPropertyChanged();
             }
@@ -98,7 +98,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoIsCompleted;
             set
             {
-                if (_todoIsCompleted == value) return; // ✅
+                if (_todoIsCompleted == value) return; // 
                 _todoIsCompleted = value;
                 OnPropertyChanged();
             }
@@ -110,7 +110,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoPriority;
             set
             {
-                if (_todoPriority == value) return; // ✅
+                if (_todoPriority == value) return; // 
                 _todoPriority = value;
                 OnPropertyChanged();
             }
@@ -122,7 +122,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoDueDate;
             set
             {
-                if (_todoDueDate == value) return; // ✅
+                if (_todoDueDate == value) return; // 
                 _todoDueDate = value;
                 OnPropertyChanged();
             }
@@ -134,7 +134,7 @@ namespace SimpleWPFWork.WPFUI
             get => _todoUsername;
             set
             {
-                if (_todoUsername == value) return; // ✅
+                if (_todoUsername == value) return; // 
                 _todoUsername = value;
                 OnPropertyChanged();
             }
@@ -147,7 +147,7 @@ namespace SimpleWPFWork.WPFUI
             get => _isLoading;
             set
             {
-                if (_isLoading == value) return; // ✅
+                if (_isLoading == value) return; // 
                 _isLoading = value;
                 OnPropertyChanged();
             }
@@ -159,7 +159,7 @@ namespace SimpleWPFWork.WPFUI
             get => _statusMessage;
             set
             {
-                if (_statusMessage == value) return; // ✅
+                if (_statusMessage == value) return; // 
                 _statusMessage = value;
                 OnPropertyChanged();
             }
@@ -171,7 +171,7 @@ namespace SimpleWPFWork.WPFUI
             get => _isTodoFormEnabled;
             set
             {
-                if (_isTodoFormEnabled == value) return; // ✅
+                if (_isTodoFormEnabled == value) return; // 
                 _isTodoFormEnabled = value;
                 OnPropertyChanged();
             }
@@ -332,7 +332,7 @@ namespace SimpleWPFWork.WPFUI
                     Categories.Add(savedCategory);
                     SelectedCategory = savedCategory;
 
-                    // ✅ Success Popup
+                    //  Success Popup
                     ModernMessageBox.Show(
                         $"Category '{savedCategory.Name}' created successfully!",
                         "Success",
@@ -361,7 +361,7 @@ namespace SimpleWPFWork.WPFUI
                         SelectedCategory = savedCategory;
                     }
 
-                    // ✅ Success Popup
+                    //  Success Popup
                     ModernMessageBox.Show(
                         $"Category '{savedCategory.Name}' updated successfully!",
                         "Success",
@@ -375,7 +375,7 @@ namespace SimpleWPFWork.WPFUI
             {
                 StatusMessage = "Failed to save category";
 
-                // ✅ Error Popup
+                //  Error Popup
                 ModernMessageBox.Show(
                     $"Failed to save category: {ex.Message}",
                     "Error",
@@ -425,7 +425,7 @@ namespace SimpleWPFWork.WPFUI
                     savedTodo = await _client.TodoPOSTAsync(command);
                     TodosList.Insert(0, savedTodo);
 
-                    // ✅ Success Popup
+                    //  Success Popup
                     ModernMessageBox.Show(
                         $"Todo '{savedTodo.Title}' created successfully!",
                         "Success",
@@ -459,7 +459,7 @@ namespace SimpleWPFWork.WPFUI
                         TodosList[index] = savedTodo;
                     }
 
-                    // ✅ Success Popup
+                    //  Success Popup
                     ModernMessageBox.Show(
                         $"Todo '{savedTodo.Title}' updated successfully!",
                         "Success",
@@ -469,14 +469,14 @@ namespace SimpleWPFWork.WPFUI
                     StatusMessage = "Todo updated successfully";
                 }
 
-                // ✅ Kaydedilen todo'yu tekrar seç
+                //  Kaydedilen todo'yu tekrar seç
                 SelectedTodo = savedTodo;
             }
             catch (ApiException ex)
             {
                 StatusMessage = "Failed to save todo";
 
-                // ✅ Error Popup
+                //  Error Popup
                 ModernMessageBox.Show(
                     $"Failed to save todo: {ex.Message}",
                     "Error",
@@ -516,7 +516,7 @@ namespace SimpleWPFWork.WPFUI
 
                 ClearTodoForm();
 
-                // ✅ Success Popup
+                //  Success Popup
                 ModernMessageBox.Show(
                     $"Todo '{deletedTitle}' deleted successfully!",
                     "Success",
@@ -529,7 +529,7 @@ namespace SimpleWPFWork.WPFUI
             {
                 StatusMessage = "Failed to delete todo";
 
-                // ✅ Error Popup
+                //  Error Popup
                 ModernMessageBox.Show(
                     $"Failed to delete todo: {ex.Message}",
                     "Error",
@@ -592,7 +592,7 @@ namespace SimpleWPFWork.WPFUI
                 Categories.Remove(SelectedCategory);
                 SelectedCategory = Categories.FirstOrDefault();
 
-                // ✅ Success Popup
+                //  Success Popup
                 ModernMessageBox.Show(
                     $"Category '{deletedName}' deleted successfully!",
                     "Success",
@@ -605,7 +605,7 @@ namespace SimpleWPFWork.WPFUI
             {
                 StatusMessage = "Failed to delete category";
 
-                // ✅ Error Popup
+                //  Error Popup
                 ModernMessageBox.Show(
                     $"Failed to delete category: {ex.Message}",
                     "Error",

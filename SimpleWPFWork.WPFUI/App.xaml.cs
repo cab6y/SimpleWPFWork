@@ -15,16 +15,16 @@ namespace SimpleWPFWork.WPFUI
 
         public App()
         {
-            // ✅ Serilog'u en başta configure et
+            //  Serilog'u en başta configure et
             ConfigureSerilog();
 
-            // ✅ Global exception handler
+            //  Global exception handler
             this.DispatcherUnhandledException += Application_DispatcherUnhandledException;
         }
 
         private void ConfigureSerilog()
         {
-            // ✅ Uygulamanın çalıştığı dizin
+            //  Uygulamanın çalıştığı dizin
             var appDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             var logPath = Path.Combine(appDirectory, "logs", "app-.txt");
@@ -87,7 +87,7 @@ namespace SimpleWPFWork.WPFUI
         {
             var baseUrl = "https://localhost:7213";
 
-            // ✅ Serilog'u ILogger<T> ile kullanabilmek için
+            //  Serilog'u ILogger<T> ile kullanabilmek için
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.ClearProviders();
@@ -129,13 +129,13 @@ namespace SimpleWPFWork.WPFUI
         {
             Log.Information("=== Application Shutting Down ===");
 
-            // ✅ ServiceProvider'ı dispose et
+            //  ServiceProvider'ı dispose et
             if (ServiceProvider is IDisposable disposable)
             {
                 disposable.Dispose();
             }
 
-            // ✅ Serilog'u flush et ve kapat
+            //  Serilog'u flush et ve kapat
             Log.CloseAndFlush();
 
             base.OnExit(e);
